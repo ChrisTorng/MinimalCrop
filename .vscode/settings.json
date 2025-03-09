@@ -35,7 +35,11 @@
   ],
   "C_Cpp_Runner.enableWarnings": true,
   "C_Cpp_Runner.warningsAsError": false,
-  "C_Cpp_Runner.compilerArgs": [ "/std:c++17" ],
+  "C_Cpp_Runner.compilerArgs": [
+    "/std:c++17",
+    "/D_UNICODE",
+    "DUNICODE"
+  ],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [
     ".\\packages\\Microsoft.Windows.ImplementationLibrary.1.0.231216.1\\include",
@@ -68,5 +72,8 @@
     "build": true,
     "packages": true
   },
-  "explorerExclude.backup": {}
+  "explorerExclude.backup": {},
+  "files.associations": {
+    "xstring": "cpp"
+  }
 }
