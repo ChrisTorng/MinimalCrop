@@ -10,12 +10,12 @@
 #include <common/interop/shared_constants.h>
 
 #include <common/utils/gpo.h>
-#include <common/utils/logger_helper.h>
+// #include <common/utils/logger_helper.h>
 #include <common/utils/ProcessWaiter.h>
 #include <common/utils/UnhandledExceptionHandler.h>
 #include <common/utils/winapi_error.h>
 
-#include <common/Telemetry/EtwTrace/EtwTrace.h>
+//#include <common/Telemetry/EtwTrace/EtwTrace.h>
 
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
@@ -40,18 +40,18 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
     // Initialize COM
     winrt::init_apartment(winrt::apartment_type::single_threaded);
 
-    Trace::CropAndLock::RegisterProvider();
+    //Trace::CropAndLock::RegisterProvider();
 
-    Shared::Trace::ETWTrace trace;
-    trace.UpdateState(true);
+    //Shared::Trace::ETWTrace trace;
+    //trace.UpdateState(true);
 
     // Initialize logger automatic logging of exceptions.
-    LoggerHelpers::init_logger(NonLocalizable::ModuleKey, L"", LogSettings::cropAndLockLoggerName);
+    //LoggerHelpers::init_logger(NonLocalizable::ModuleKey, L"", LogSettings::cropAndLockLoggerName);
     InitUnhandledExceptionHandler();
 
     if (powertoys_gpo::getConfiguredCropAndLockEnabledValue() == powertoys_gpo::gpo_rule_configured_disabled)
     {
-        Logger::warn(L"Tried to start with a GPO policy setting the utility to always be disabled. Please contact your systems administrator.");
+        //Logger::warn(L"Tried to start with a GPO policy setting the utility to always be disabled. Please contact your systems administrator.");
         return 0;
     }
 
@@ -61,7 +61,7 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
     auto mutex = CreateMutex(nullptr, true, instanceMutexName.c_str());
     if (mutex == nullptr)
     {
-        Logger::error(L"Failed to create mutex. {}", get_last_error_or_default(GetLastError()));
+        //Logger::error(L"Failed to create mutex. {}", get_last_error_or_default(GetLastError()));
     }
 
     if (GetLastError() == ERROR_ALREADY_EXISTS)
@@ -73,7 +73,7 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
     std::wstring pid = std::wstring(lpCmdLine);
     if (pid.empty())
     {
-        Logger::warn(L"Tried to run Crop And Lock as a standalone.");
+        //Logger::warn(L"Tried to run Crop And Lock as a standalone.");
         MessageBoxW(nullptr, L"CropAndLock can't run as a standalone. Start it from PowerToys.", L"CropAndLock", MB_ICONERROR);
         return 1;
     }
@@ -82,14 +82,14 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
     ProcessWaiter::OnProcessTerminate(pid, [mainThreadId](int err) {
         if (err != ERROR_SUCCESS)
         {
-            Logger::error(L"Failed to wait for parent process exit. {}", get_last_error_or_default(err));
+            //Logger::error(L"Failed to wait for parent process exit. {}", get_last_error_or_default(err));
         }
         else
         {
-            Logger::trace(L"PowerToys runner exited.");
+            //Logger::trace(L"PowerToys runner exited.");
         }
 
-        Logger::trace(L"Exiting CropAndLock");
+        //Logger::trace(L"Exiting CropAndLock");
         PostThreadMessage(mainThreadId, WM_QUIT, 0, 0);
     });
 
@@ -153,13 +153,13 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
             {
             case CropAndLockType::Reparent:
                 croppedWindow = std::make_shared<ReparentCropAndLockWindow>(title, 800, 600);
-                Logger::trace(L"Creating a reparent window");
-                Trace::CropAndLock::CreateReparentWindow();
+                //Logger::trace(L"Creating a reparent window");
+                //Trace::CropAndLock::CreateReparentWindow();
                 break;
             case CropAndLockType::Thumbnail:
                 croppedWindow = std::make_shared<ThumbnailCropAndLockWindow>(title, 800, 600);
-                Logger::trace(L"Creating a thumbnail window");
-                Trace::CropAndLock::CreateThumbnailWindow();
+                //Logger::trace(L"Creating a thumbnail window");
+                //Trace::CropAndLock::CreateThumbnailWindow();
                 break;
             default:
                 return;
@@ -197,7 +197,7 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
     m_exit_event_handle = CreateEventW(nullptr, false, false, CommonSharedConstants::CROP_AND_LOCK_EXIT_EVENT);
     if (!m_reparent_event_handle || !m_thumbnail_event_handle || !m_exit_event_handle)
     {
-        Logger::warn(L"Failed to create events. {}", get_last_error_or_default(GetLastError()));
+        //Logger::warn(L"Failed to create events. {}", get_last_error_or_default(GetLastError()));
         return 1;
     }
 
@@ -221,7 +221,7 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
                 });
                 if (!enqueueSucceeded)
                 {
-                    Logger::error("Couldn't enqueue message to reparent a window.");
+                    //Logger::error("Couldn't enqueue message to reparent a window.");
                 }
                 break;
             }
@@ -233,14 +233,14 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
                 });
                 if (!enqueueSucceeded)
                 {
-                    Logger::error("Couldn't enqueue message to thumbnail a window.");
+                    //Logger::error("Couldn't enqueue message to thumbnail a window.");
                 }
                 break;
             }
             case WAIT_OBJECT_0 + 2:
             {
                 // Exit Event
-                Logger::trace(L"Received an exit event.");
+                //Logger::trace(L"Received an exit event.");
                 PostThreadMessage(mainThreadId, WM_QUIT, 0, 0);
                 break;
             }
@@ -265,9 +265,9 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PWSTR lpCmdLine, _I
         DispatchMessageW(&msg);
     }
 
-    trace.Flush();
+    //trace.Flush();
 
-    Trace::CropAndLock::UnregisterProvider();
+    //Trace::CropAndLock::UnregisterProvider();
 
     m_running = false;
     // Needed to unblock MsgWaitForMultipleObjects one last time
