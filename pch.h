@@ -1,5 +1,14 @@
 ﻿#pragma once
 
+// 確保定義 UNICODE 和 _UNICODE 以使用 Windows API 的 Unicode 版本
+#ifndef UNICODE
+#define UNICODE
+#endif
+
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+
 // Collision from minWinDef min/max and std
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
