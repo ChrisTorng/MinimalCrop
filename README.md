@@ -30,13 +30,18 @@ nuget restore -SolutionDirectory .
   - `packages\Microsoft.Windows.ImplementationLibrary.1.0.231216.1`
   - `packages\robmikh.common.0.0.23-beta`
 
+- Search for `..\` and `../`
+`
 - `CropAndLock.vcxproj`:
   - Replace `..\\..\\..\\..\\` to `.\\` in 
   - Remove reference projects:
     - common\logger\logger.vcxproj
     - common\SettingsAPI\SettingsAPI.vcxproj
     - common\Telemetry\EtwTrace\EtwTrace.vcxproj
- 
+
+- `CropAndLock.vcxproj.filters`
+  - Comment out `<Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />`
+
 - `.vscode\settings.json`:
     ```
     "C_Cpp_Runner.compilerArgs": [ "/std:c++17" ],
@@ -58,4 +63,5 @@ nuget restore -SolutionDirectory .
     - `ProcessWaiter.h`
     - `UnhandledExceptionHandler.h`
     - `winapi_error.h`
-
+  - [PowerToys/src/common/version](https://github.com/microsoft/PowerToys/blob/main/src/common/version)
+    - `version.h`
