@@ -12,11 +12,11 @@ void ReparentCropAndLockWindow::RegisterWindowClass()
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
     wcex.hInstance = instance;
-    wcex.hIcon = LoadIconW(instance, MAKEINTRESOURCEW(IDI_APPLICATION));
+    wcex.hIcon = LoadIconW(instance, IDI_APPLICATION);
     wcex.hCursor = LoadCursorW(nullptr, IDC_ARROW);
     wcex.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
     wcex.lpszClassName = ClassName.c_str();
-    wcex.hIconSm = LoadIconW(wcex.hInstance, MAKEINTRESOURCEW(IDI_APPLICATION));
+    wcex.hIconSm = LoadIconW(wcex.hInstance, IDI_APPLICATION);
     winrt::check_bool(RegisterClassExW(&wcex));
 }
 
